@@ -54,3 +54,16 @@ func getDigitStr(str string) string {
 	}
 	return str
 }
+
+func findIndices(haystack, needle string) []int {
+	var x []int
+	for i := 0; i < len(haystack)-len(needle); i++ {
+		j := strings.Index(haystack[i:], needle)
+		if j < 0 {
+			break
+		}
+		i += j
+		x = append(x, i)
+	}
+	return x
+}

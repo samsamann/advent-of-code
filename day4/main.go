@@ -15,7 +15,9 @@ func main() {
 	scanner, closeFunc = util.GetScanner("day4")
 	defer closeFunc()
 
-	var sum int
+	var points int
+	var totalScratchcards int
+	var wonCards = make([]int, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
 		card := strings.Split(line, ":")
@@ -23,20 +25,31 @@ func main() {
 		winningNumbers := stringToInt(strings.Split(strings.TrimSpace(cardContent[0]), " "))
 		selectedNumbers := stringToInt(strings.Split(strings.TrimSpace(cardContent[1]), " "))
 
-		points := 0
+		wins := 0
 		for _, number := range selectedNumbers {
 			if number == 0 {
 				continue
 			}
+			if len(wonCards) == totalScratchcards+wins {
+				wonCards = append(wonCards, 0)
+			}
 			for _, winningNumber := range winningNumbers {
 				if number == winningNumber {
-					points++
+					wonCards[totalScratchcards+wins] = wonCards[totalScratchcards+wins] + 1
+					wins++
 				}
 			}
 		}
-		sum += int(math.Pow(2, float64(points-1)))
+		points += int(math.Pow(2, float64(wins-1)))
+		totalScratchcards++
 	}
-	log.Printf("Points: %d \n", sum)
+	var tempSum := 0
+	for i := 0; i < len(wonCards); i++ {
+		deep()
+	}
+
+	log.Printf("Points: %d \n", points)
+	log.Printf("Total scratchcards: %d \n", totalScratchcards)
 }
 
 func stringToInt(input []string) []int {
@@ -45,4 +58,11 @@ func stringToInt(input []string) []int {
 		numbers[i], _ = strconv.Atoi(strings.TrimSpace(str))
 	}
 	return numbers
+}
+
+func deep(wonCards []int) int {
+	if () {
+
+	}
+	deep(wonCards)
 }
