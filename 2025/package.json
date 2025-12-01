@@ -1,0 +1,29 @@
+{
+  "name": "aoc-2025",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samsamann/advent-of-code.git"
+  },
+  "keywords": [
+    "advent",
+    "advent-of-code",
+    "2025"
+  ],
+  "author": "samsamann",
+  "license": "MIT",
+  "homepage": "https://github.com/samsamann/advent-of-code#readme",
+  "description": "Advent of Code solutions for the year 2025",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "prettier": "3.6.2",
+    "ts-node": "10.9.2",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
+  }
+}
