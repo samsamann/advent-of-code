@@ -3,7 +3,7 @@
 ## Progress
 
 - Puzzle 1: ⭐⭐
-- Puzzle 2: x
+- Puzzle 2: ⭐⭐
 - Puzzle 3: x
 - Puzzle 4: x
 - Puzzle 5: x
