@@ -4,7 +4,7 @@
 
 - Puzzle 1: ⭐⭐
 - Puzzle 2: ⭐⭐
-- Puzzle 3: x
+- Puzzle 3: ⭐⭐
 - Puzzle 4: x
 - Puzzle 5: x
 - Puzzle 6: x
