@@ -2,30 +2,29 @@ import { readFile } from '../utils/readFile'
 
 function puzzle4() {
   const data = readFile(4, false)
+  const distance = 1
 
   const checkNeighbors = (
     lastCols: string[][],
     lastCurrentLine: string[],
     nextCurrentLine: string[],
     nextCols: string[][],
-    checkFn: (test: string[]) => boolean,
-    lookup: number,
-  ): number => {
+    removable: number[],
+  ): void => {
     if (nextCurrentLine.length === 0) {
-      return 0
+      return
     }
-    let count = 0
     const roll = nextCurrentLine[0]
 
     if (roll === '@') {
       const test = [
-        ...lastCols.flatMap((col) => col.slice(0, lookup)),
-        ...lastCurrentLine.slice(0, lookup),
-        ...nextCurrentLine.slice(1, lookup + 1),
-        ...nextCols.flatMap((col) => col.slice(0, lookup + 1)),
+        ...lastCols.flatMap((col) => col.slice(0, distance)),
+        ...lastCurrentLine.slice(0, distance),
+        ...nextCurrentLine.slice(1, distance + 1),
+        ...nextCols.flatMap((col) => col.slice(0, distance + 1)),
       ]
-      if (checkFn(test)) {
-        count = 1
+      if (test.filter((s) => s === '@').length < 4) {
+        removable.push(lastCurrentLine.length)
       }
     }
 
@@ -40,55 +39,49 @@ function puzzle4() {
     }
 
     lastCurrentLine.unshift(roll)
-    return (
-      count +
-      checkNeighbors(
-        lastCols,
-        lastCurrentLine,
-        nextCurrentLine.slice(1),
-        nextCols,
-        checkFn,
-        lookup,
-      )
-    )
+    return checkNeighbors(lastCols, lastCurrentLine, nextCurrentLine.slice(1), nextCols, removable)
   }
 
-  const search = (
-    lines: string[],
-    lastLines: string[][],
-    lookup: number,
-  ): number => {
+  const search = (lines: string[], lastLines: string[][], newLines: string[]): number => {
     if (lines.length === 0) {
       return 0
     }
     const currentLine = lines[0].split('')
     if (currentLine.length === 0) {
-      return search(lines.slice(1), lastLines.slice(0, lookup), lookup)
+      return search(lines.slice(1), lastLines.slice(0, distance), newLines)
     }
 
-    // console.log('----')
-    // console.log('last Line:    ', lastLines.map((l) => l.join(',')).join('\n'))
-    // console.log('current Line: ', currentLine.join(','))
+    const nextLines = lines.slice(1, distance + 1).map((l) => l.split(''))
 
-    const nextLines = lines.slice(1, lookup + 1).map((l) => l.split(''))
-    // console.log('next Line:    ', nextLines.map((l) => l.join(',')).join('\n'))
+    const removable: number[] = []
+    checkNeighbors([], [], currentLine, [...lastLines, ...nextLines], removable)
 
-    const count = checkNeighbors(
-      [],
-      [],
-      currentLine,
-      [...lastLines, ...nextLines],
-      (test: string[]) => test.filter(s => s === '@').length < 4,
-      lookup,
-    )
-
+    const removed = currentLine.map((c, i) => (removable.includes(i) ? 'x' : c)).join('')
+    newLines.push(removed)
     lastLines.unshift(currentLine)
-    return count + search(lines.slice(1), lastLines.slice(0, lookup), lookup)
+    return removable.length + search(lines.slice(1), lastLines.slice(0, distance), newLines)
   }
 
-  const lines = data.split('\n')
+  let lines = data.split('\n')
 
-  console.log('Puzzle 4 - Part 1: ', search(lines, [], 1))
-  console.log('Puzzle 4 - Part 2: ')
+  let countFirstIteration = 0
+  let countAll = 0
+  let found = true
+  do {
+    const newLines: string[] = []
+    const count = search(lines, [], newLines)
+    if (count === 0) {
+      found = false
+    } else {
+      lines = newLines
+      if (countFirstIteration === 0) {
+        countFirstIteration = count
+      }
+      countAll += count
+    }
+  } while (found)
+
+  console.log('Puzzle 4 - Part 1: ', countFirstIteration)
+  console.log('Puzzle 4 - Part 2: ', countAll)
 }
 puzzle4()
